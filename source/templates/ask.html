@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+
+<title>LeoChat</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #cf1152 0%, #cf1152 20%, #ef7c01 50%, #0ab3fc 80%, #56aaf0 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .background-text {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 8rem;
+    color: rgba(255, 255, 255, 0.25);
+    font-weight: bold;
+    pointer-events: none;
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  .container {
+    background: rgba(0, 0, 0, 0.6);
+    padding: 1rem 2rem 1rem 2rem;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 1200px;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.3);
+    margin-bottom: 20px;
+    z-index: 1;
+  }
+
+  .chat-box {
+    height: calc(100% - 4rem - 1rem);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+  }
+
+  .message {
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    max-width: 80%;
+    word-wrap: break-word;
+    animation: fadeIn 0.3s ease-in-out;
+    position: relative;
+  }
+
+  .user-message {
+    align-self: flex-end;
+    background-color: #f7f6f5;
+    color: #000;
+  }
+
+  .bot-message {
+    align-self: flex-start;
+    background-color: #fefdfd;
+    color: #080808;
+  }
+
+  .satisfy-btn {
+    margin-top: 5px;
+    padding: 4px 8px;
+    font-size: 0.85rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #cf1152 0%, #cf1152 20%, #ef7c01 45%, #ef7c01 100%);
+  } 
+
+  @keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+  }
+
+  .input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  textarea {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 6px;
+    resize: none;
+    font-size: 1rem;
+    font-family: inherit;
+    box-sizing: border-box;
+    background-color: #efefef;
+    color: #333333;
+    height: 3.5rem;
+  }
+
+  button.send-btn {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px;
+    height: 48px;
+    border: none;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #cf1152 0%, #cf1152 20%, #ef7c01 50%, #0ab3fc 80%, #56aaf0 100%);
+    cursor: pointer;
+    font-size: 1.4rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  button.send-btn:hover {
+    opacity: 0.9;
+  }
+</style>
+</head>
+<body>
+<div class="background-text">LeoChat</div>
+
+<div class="container">
+  <div class="chat-box" id="chatBox" style="max-height:500px; overflow-y:auto; margin-bottom:1rem;"></div>
+
+  <form id="questionForm">
+    <div class="input-group">
+      <textarea id="question" name="question" rows="3" placeholder="Ask your question to LeoChat ..." required></textarea>
+      <button type="submit" class="send-btn">↵</button>
+    </div>
+  </form>
+</div>
+
+<script>
+const form = document.getElementById('questionForm');
+const textarea = document.getElementById('question');
+const chatBox = document.getElementById('chatBox');
+
+function addMessage(text, sender, showSatisfy=false, qaData=null) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    div.classList.add('message', sender === 'user' ? 'user-message' : 'bot-message');
+
+    if (showSatisfy && qaData) {
+        const btn = document.createElement('button');
+        btn.textContent = "✔️ Je suis satisfait";
+        btn.className = 'satisfy-btn';
+        btn.addEventListener('click', async () => {
+            try {
+                const response = await fetch('/satisfied', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(qaData)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    btn.textContent = "Merci pour votre retour !";
+                    btn.disabled = true;
+                }
+            } catch(err) {
+                console.error(err);
+            }
+        });
+        div.appendChild(document.createElement('br'));
+        div.appendChild(btn);
+    }
+
+    chatBox.prepend(div);
+}
+
+form.addEventListener('submit', async function(event){
+    event.preventDefault();
+    const question = textarea.value.trim();
+    if (!question) return;
+
+    addMessage(question, 'user');
+    textarea.value = '';
+
+    try {
+        const response = await fetch('/answer', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({question})
+        });
+        const data = await response.json();
+        if (data.answer) {
+            addMessage(data.answer, 'bot', true, {question: data.question, answer: data.answer});
+        }
+    } catch (err) {
+        console.error(err);
+    }
+});
+
+textarea.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        form.dispatchEvent(new Event('submit'));
+    }
+});
+</script>
+</body>
+</html>
