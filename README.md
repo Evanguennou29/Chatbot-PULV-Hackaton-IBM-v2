@@ -1,6 +1,6 @@
-# LeoChat — projet hackathon IBM
+# LeoChat Projet hackathon IBM
 
-Prototype de chatbot basé sur IBM watsonx.ai et un jeu de questions/réponses. La présentation statique est publiée depuis `docs/` avec GitHub Pages.
+Prototype de chatbot basé sur IBM watsonx.ai et un jeu de questions/réponses. 
 
 ## Lancer le prototype Python
 
