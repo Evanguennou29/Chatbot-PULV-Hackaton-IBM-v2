@@ -1,4 +1,4 @@
-# LeoChat — le bureau des questions
+# LeoChat — assistant étudiant
 
 Prototype étudiant réalisé pour le **hackathon IBM × Pôle Léonard de Vinci (2025), groupe 17**. LeoChat explore une autre façon de consulter le Help Center : poser une question en langage naturel et recevoir une réponse produite avec IBM watsonx.ai à partir d’un jeu de questions/réponses.
 
@@ -6,7 +6,7 @@ Prototype étudiant réalisé pour le **hackathon IBM × Pôle Léonard de Vinci
 
 ## Deux interfaces
 
-- **Présentation** : [site GitHub Pages](https://evanguennou29.github.io/Chatbot-PULV-Hackaton-IBM-v2/), dans `docs/`. Un carnet de questions avec trois fiches sourcées, la vidéo du prototype et les notes du projet. Aucun appel à une IA n’est effectué sur cette page.
+- **Présentation** : [site GitHub Pages](https://evanguennou29.github.io/Chatbot-PULV-Hackaton-IBM-v2/), dans `docs/`. Un espace d’exploration avec une conversation d’exemple, son extrait source et des vues dédiées à la vidéo, au projet et à l’équipe. Aucun appel à une IA n’est effectué sur cette page.
 - **Chatbot Flask** : dans `source/`. Saisie libre d’une question, génération par watsonx.ai et enregistrement des réponses marquées comme utiles.
 
 ## Démarrage avec Docker
@@ -103,7 +103,7 @@ Pour prévisualiser uniquement la présentation :
 python -m http.server 8080 --directory docs
 ```
 
-La page utilise DM Sans et Instrument Serif via Google Fonts, avec des polices système de secours si le réseau est indisponible.
+La page conserve la palette anthracite, jaune acide, rose et bleu du site d’origine. Elle utilise Space Grotesk et DM Mono via Google Fonts, avec des polices système de secours si le réseau est indisponible.
 
 ## Fonctionnement actuel
 

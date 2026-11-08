@@ -28,7 +28,7 @@ jobs:
         run: |
           curl --fail http://localhost:8000/health
           curl --fail http://localhost:8000/ > /dev/null
-          curl --fail http://localhost:8080/ | grep 'Le bureau'
+          curl --fail http://localhost:8080/ | grep 'Explorer le prototype LeoChat'
           code=$(curl -s -o /tmp/answer.json -w '%{http_code}' -H 'Content-Type: application/json' -d '{"question":"Bonjour"}' http://localhost:8000/answer)
           test "$code" = 503
           curl --fail -H 'Content-Type: application/json' -d '{"question":"CI persistence probe","answer":"CI sample"}' http://localhost:8000/satisfied
