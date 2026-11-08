@@ -2,6 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>LeoChat</title>
 <style>
@@ -132,12 +133,13 @@
 <div class="background-text">LeoChat</div>
 
 <div class="container">
-  <div class="chat-box" id="chatBox" style="max-height:500px; overflow-y:auto; margin-bottom:1rem;"></div>
+  <div class="chat-box" id="chatBox" role="log" aria-label="Conversation" style="max-height:500px; overflow-y:auto; margin-bottom:1rem;"></div>
+  <p id="status" role="status" style="color:white"></p>
 
   <form id="questionForm">
     <div class="input-group">
-      <textarea id="question" name="question" rows="3" placeholder="Ask your question to LeoChat ..." required></textarea>
-      <button type="submit" class="send-btn">↵</button>
+      <textarea id="question" name="question" rows="3" aria-label="Votre question" maxlength="2000" placeholder="Posez votre question à LeoChat…" required></textarea>
+      <button type="submit" class="send-btn" aria-label="Envoyer">↵</button>
     </div>
   </form>
 </div>
@@ -146,6 +148,9 @@
 const form = document.getElementById('questionForm');
 const textarea = document.getElementById('question');
 const chatBox = document.getElementById('chatBox');
+const status = document.getElementById('status');
+const sendButton = form.querySelector('button');
+let pending = false;
 
 function addMessage(text, sender, showSatisfy=false, qaData=null) {
     const div = document.createElement('div');
@@ -164,12 +169,13 @@ function addMessage(text, sender, showSatisfy=false, qaData=null) {
                     body: JSON.stringify(qaData)
                 });
                 const result = await response.json();
+                if (!response.ok) throw new Error(result.error || 'Retour non enregistré.');
                 if (result.success) {
                     btn.textContent = "Merci pour votre retour !";
                     btn.disabled = true;
                 }
             } catch(err) {
-                console.error(err);
+                status.textContent = err.message || 'Impossible d’enregistrer votre retour.';
             }
         });
         div.appendChild(document.createElement('br'));
@@ -182,7 +188,10 @@ function addMessage(text, sender, showSatisfy=false, qaData=null) {
 form.addEventListener('submit', async function(event){
     event.preventDefault();
     const question = textarea.value.trim();
-    if (!question) return;
+    if (!question || pending) return;
+    pending = true;
+    sendButton.disabled = true;
+    status.textContent = 'Recherche d’une réponse…';
 
     addMessage(question, 'user');
     textarea.value = '';
@@ -194,11 +203,16 @@ form.addEventListener('submit', async function(event){
             body: JSON.stringify({question})
         });
         const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Le service est indisponible.');
+        status.textContent = '';
         if (data.answer) {
             addMessage(data.answer, 'bot', true, {question: data.question, answer: data.answer});
         }
     } catch (err) {
-        console.error(err);
+        status.textContent = err.message || 'Connexion impossible. Réessayez.';
+    } finally {
+        pending = false;
+        sendButton.disabled = false;
     }
 });
 

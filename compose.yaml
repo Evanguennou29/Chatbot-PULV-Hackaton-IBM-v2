@@ -1,0 +1,18 @@
+services:
+  chatbot:
+    build: .
+    ports:
+      - "127.0.0.1:${CHATBOT_PORT:-8000}:8000"
+    env_file: .env
+    volumes:
+      - knowledge:/app/dataset
+    restart: unless-stopped
+  presentation:
+    image: nginxinc/nginx-unprivileged:1.28-alpine
+    ports:
+      - "127.0.0.1:${PRESENTATION_PORT:-8080}:8080"
+    volumes:
+      - ./docs:/usr/share/nginx/html:ro
+    restart: unless-stopped
+volumes:
+  knowledge:
