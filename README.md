@@ -103,7 +103,7 @@ Pour prévisualiser uniquement la présentation :
 python -m http.server 8080 --directory docs
 ```
 
-La page conserve la palette anthracite, jaune acide, rose et bleu du site d’origine. Elle utilise Space Grotesk et DM Mono via Google Fonts, avec des polices système de secours si le réseau est indisponible.
+La page conserve la palette anthracite, jaune acide, rose et bleu du site d’origine. Elle utilise Space Grotesk via Google Fonts, avec des polices système de secours si le réseau est indisponible.
 
 ## Fonctionnement actuel
 
