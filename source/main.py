@@ -1,65 +1,82 @@
-from flask import Flask, render_template, request, jsonify
-from Generate import query
 import csv
-import os
-app = Flask(__name__, static_folder='static', template_folder='templates')
+from threading import Lock
 
-history = []  # history of questions and answers
-#
+from flask import Flask, jsonify, render_template, request
+from Generate import ConfigurationError, query
+from config import DATASET_PATH
+
+app = Flask(__name__, static_folder="static", template_folder="templates")
+app.config["MAX_CONTENT_LENGTH"] = 16 * 1024
+feedback_lock = Lock()
+
+
 def generate_answer(question):
     return query(question)
 
-@app.route('/', methods=['GET'])
+
+def payload():
+    data = request.get_json(silent=True)
+    return data if isinstance(data, dict) else {}
+
+
+def text_field(data, key):
+    value = data.get(key)
+    return value.strip() if isinstance(value, str) else ""
+
+
+@app.get("/")
 def ask():
-    return render_template('ask.html')
+    return render_template("ask.html")
 
-@app.route('/answer', methods=['POST'])
+
+@app.get("/health")
+def health():
+    # Liveness only: never makes a paid IBM request.
+    if not DATASET_PATH.is_file():
+        return jsonify(status="error", error="Jeu de données introuvable"), 503
+    return jsonify(status="ok")
+
+
+@app.post("/answer")
 def answer():
-    data = request.get_json()
-    question = data.get("question", "").strip()
-    if question:
+    question = text_field(payload(), "question")
+    if not question:
+        return jsonify(error="Aucune question reçue"), 400
+    if len(question) > 2000:
+        return jsonify(error="La question est limitée à 2 000 caractères"), 400
+    try:
         answer_text = generate_answer(question)
-        history.append({ "question": question, "answer": answer_text })
-        return jsonify({"question": question, "answer": answer_text, "history": history})
-    return jsonify({"error": "Aucune question reçue"}), 400
+    except ConfigurationError as error:
+        return jsonify(error=str(error)), 503
+    except Exception:
+        app.logger.exception("Échec de génération watsonx.ai")
+        return jsonify(error="Le service de réponse est indisponible. Réessayez plus tard."), 502
+    return jsonify(question=question, answer=answer_text)
 
 
-
-@app.route('/satisfied', methods=['POST'])
+@app.post("/satisfied")
 def satisfied():
-    data = request.get_json()
-    question = data.get("question", "").strip()
-    answer = data.get("answer", "").strip()
+    data = payload()
+    question, answer_text = text_field(data, "question"), text_field(data, "answer")
+    if not question or not answer_text:
+        return jsonify(error="Question ou réponse manquante"), 400
+    if len(question) > 2000 or len(answer_text) > 10000:
+        return jsonify(error="Question ou réponse trop longue"), 400
 
-    if question and answer:
-        csv_file = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "dataset", "data_pretraitee.csv"))
-
-        # Read the last id
-        try:
-            with open(csv_file, 'r', encoding='utf-8') as f:
-                reader = csv.DictReader(f)
-                rows = list(reader)
-                last_id = int(rows[-1]['id']) if rows else 0
-        except FileNotFoundError:
-            # If the file does not exist yet
-            last_id = 0
-
+    # A single Gunicorn worker owns this CSV; threads share this lock.
+    with feedback_lock:
+        with DATASET_PATH.open(newline="", encoding="utf-8") as stream:
+            reader = csv.DictReader(stream)
+            fieldnames = reader.fieldnames
+            if not fieldnames or not {"id", "Title", "Content"}.issubset(fieldnames):
+                return jsonify(error="Structure du jeu de données invalide"), 500
+            last_id = max((int(row["id"]) for row in reader), default=0)
         new_id = last_id + 1
+        with DATASET_PATH.open("a", newline="", encoding="utf-8") as stream:
+            writer = csv.DictWriter(stream, fieldnames=fieldnames)
+            writer.writerow({"id": new_id, "Title": question, "Content": answer_text})
+    return jsonify(success=True, id=new_id)
 
-        # Writing the new row
-        with open(csv_file, 'a', newline='', encoding='utf-8') as f:
-            fieldnames = ['id', 'Title', 'Content']
-            writer = csv.DictWriter(f, fieldnames=fieldnames)
 
-            # if empty, write header
-            if f.tell() == 0:
-                writer.writeheader()
-
-            writer.writerow({'id': new_id, 'Title': question, 'Content': answer})
-
-        return jsonify({"success": True, "id": new_id})
-
-    return jsonify({"error": "Question ou réponse manquante"}), 400
-
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    app.run(host="127.0.0.1", port=5000, debug=False)

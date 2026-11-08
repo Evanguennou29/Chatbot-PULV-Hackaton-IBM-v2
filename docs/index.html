@@ -3,102 +3,84 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0b1017">
-  <meta name="description" content="LeoChat : une présentation interactive du prototype d'assistant étudiant imaginé pour le hackathon IBM x De Vinci.">
-  <title>LeoChat — le help center prend la parole</title>
+  <meta name="theme-color" content="#f4f1e9">
+  <meta name="description" content="Le bureau des questions étudiantes. Découvrez LeoChat, un prototype du groupe 17 pour le hackathon IBM × De Vinci.">
+  <title>LeoChat — Le bureau des questions</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
   <script src="app.js" defer></script>
 </head>
 <body>
-  <div class="scroll-line" aria-hidden="true"></div>
-  <div class="grain" aria-hidden="true"></div>
-
-  <nav class="rail" aria-label="Navigation principale">
-    <a class="rail-mark" href="#top" aria-label="Retour au début">LC<span>✳</span></a>
-    <div class="rail-links">
-      <a href="#experience" data-nav="experience"><span>01</span><b>Expérience</b></a>
-      <a href="#mecanique" data-nav="mecanique"><span>02</span><b>Mécanique</b></a>
-      <a href="#prototype" data-nav="prototype"><span>03</span><b>Prototype</b></a>
-      <a href="#equipe" data-nav="equipe"><span>04</span><b>Équipe</b></a>
-    </div>
-    <span class="rail-year">IBM × De Vinci <i>2025</i></span>
-  </nav>
-
-  <main id="top">
-    <section class="opening" id="experience" aria-labelledby="opening-title">
-      <div class="opening-grid" aria-hidden="true"></div>
-      <div class="opening-top">
-        <span class="edition">HACKATHON IBM × DE VINCI <em>/</em> AUTOMATION TRACK</span>
-        <a class="top-source" href="https://github.com/Evanguennou29/Chatbot-PULV-Hackaton-IBM-v2" target="_blank" rel="noopener noreferrer">VOIR LE CODE <span aria-hidden="true">↗</span></a>
-      </div>
-
-      <div class="opening-content">
-        <div class="poster-copy">
-          <div class="eyebrow"><span class="asterisk" aria-hidden="true">✳</span> UNE IDÉE NÉE AU PÔLE LÉONARD DE VINCI</div>
-          <h1 id="opening-title"><span class="line-word">LES</span><span class="line-word italic">BONNES</span><span class="line-word">RÉPONSES<span class="punct">.</span></span></h1>
-          <div class="poster-foot">
-            <p>Quand une question étudiante trouve son chemin, le support devient une conversation.</p>
-            <a href="#mecanique" class="round-scroll" aria-label="Découvrir le fonctionnement"><span aria-hidden="true">↓</span></a>
+  <a class="skip-link" href="#questions">Aller aux questions</a>
+  <div class="page">
+    <header class="masthead" id="top">
+      <a class="wordmark" href="#top" aria-label="LeoChat, accueil">léo<span>chat</span><span class="wordmark-dot">.</span></a>
+      <p>Un projet étudiant<br>Pôle Léonard de Vinci × IBM</p>
+      <nav aria-label="Navigation principale">
+        <a href="#questions">Les questions</a>
+        <a href="#atelier">L’atelier</a>
+        <a href="https://github.com/Evanguennou29/Chatbot-PULV-Hackaton-IBM-v2" target="_blank" rel="noopener noreferrer">Le dépôt ↗</a>
+      </nav>
+    </header>
+    <main>
+      <section class="desk" id="questions" aria-labelledby="desk-title">
+        <aside class="directory">
+          <p class="small-label">Vie de campus / carnet ouvert</p>
+          <h1 id="desk-title">Le bureau<br>des <em>questions.</em></h1>
+          <p class="intro">Un justificatif à déposer.<br>Une règle à comprendre.<br>Et si on commençait par demander ?</p>
+          <div class="question-index" role="group" aria-label="Choisir une question">
+            <p class="small-label">À feuilleter</p>
+            <button type="button" class="scenario active" data-scenario="absence" aria-pressed="true"><span>01</span><span>Les absences</span><span aria-hidden="true">↗</span></button>
+            <button type="button" class="scenario" data-scenario="justificatif" aria-pressed="false"><span>02</span><span>Les justificatifs</span><span aria-hidden="true">↗</span></button>
+            <button type="button" class="scenario" data-scenario="isic" aria-pressed="false"><span>03</span><span>La carte ISIC</span><span aria-hidden="true">↗</span></button>
           </div>
-          <div class="signature"><span>LEOCHAT</span><span>ASSISTANT ÉTUDIANT / PROTOTYPE 01</span></div>
-        </div>
-
-        <div class="experience-wrap">
-          <div class="experience-caption"><span class="live-indicator" aria-hidden="true"></span> EXPLORATION GUIDÉE <span>01 / 03</span></div>
-          <div class="chat-shell" aria-label="Exemple interactif de conversation LeoChat">
-            <div class="chat-top"><div class="chat-brand"><span class="chat-brand-icon">✳</span><span>LeoChat<small>Centre d'aide étudiant</small></span></div><div class="chat-actions" aria-hidden="true"><i></i><i></i><i></i></div></div>
-            <div class="chat-stage" aria-live="polite">
-              <div class="chat-time">AUJOURD'HUI <span>·</span> ÉCHANGE SIMULÉ</div>
-              <div class="bubble bubble-user" id="question-bubble"></div>
-              <div class="reply-row"><span class="reply-avatar" aria-hidden="true">✳</span><div class="bubble bubble-bot" id="answer-bubble"></div></div>
-              <div class="feedback"><span>Cette réponse vous a aidé ?</span><span class="feedback-icons" aria-hidden="true">♡ &nbsp; ↗</span></div>
+          <p class="margin-note">Une sélection du jeu de données du projet. Les règles peuvent évoluer : la scolarité reste votre référence.</p>
+        </aside>
+        <div class="reading-desk">
+          <div class="folder-top"><span>LEOCHAT / QUESTIONS CHOISIES</span><span id="folio">FICHE 01</span></div>
+          <article class="answer-sheet" aria-labelledby="question-title">
+            <div class="sheet-meta"><span id="topic">Scolarité · Absences</span><span class="archive-mark">Extrait du prototype</span></div>
+            <div id="reading-content" aria-live="polite" aria-atomic="true">
+              <h2 id="question-title">Quel est le quota d’absences autorisées par semestre ?</h2>
+              <p class="answer-label">La réponse, en clair</p>
+              <p id="answer-text">Le jeu de données prévoit 18 absences autorisées par semestre. Au-delà, un avertissement est envoyé. À la 29e absence, la compensation entre modules est perdue ; à la 39e, une convocation en conseil de discipline est prévue.</p>
+              <p id="answer-detail">Un régime différent est indiqué pour Executive Education : 10 demi-journées pour l’année académique.</p>
+              <div class="source-note"><span class="source-symbol" aria-hidden="true">↳</span><p>Dans le carnet d’origine<br><span id="source-title">« Quel est le quota d'absence autorisée par semestre? »</span><br><span class="source-ref" id="source-ref">Entrée 2135 · data_pretraitee.csv</span></p></div>
             </div>
-            <div class="chat-input" aria-hidden="true"><span>Explorez un exemple ci-dessous…</span><b>↗</b></div>
-          </div>
-          <div class="scenario-area"><p>CHOISISSEZ UNE QUESTION <span aria-hidden="true">↘</span></p><div class="scenario-list" role="group" aria-label="Choisir un exemple de question">
-            <button class="scenario active" type="button" data-scenario="absence"><span>01</span> Absences</button>
-            <button class="scenario" type="button" data-scenario="justificatif"><span>02</span> Justificatif</button>
-            <button class="scenario" type="button" data-scenario="isic"><span>03</span> Carte ISIC</button>
-          </div><small>Exemples tirés du jeu de données. Cette page n'appelle aucune API IA.</small></div>
+            <div class="sheet-bottom"><span>Reformulation d’un extrait du CSV</span><span aria-hidden="true">LC / 17</span></div>
+          </article>
+          <p class="desk-caption"><span class="caption-rule" aria-hidden="true"></span>Vous feuilletez une présentation. Le chatbot connecté se lance depuis le dépôt.</p>
         </div>
-      </div>
-
-      <div class="marquee" aria-hidden="true"><div>LE SAVOIR CIRCULE <span>✳</span> LES QUESTIONS AVANCENT <span>✳</span> LE SAVOIR CIRCULE <span>✳</span> LES QUESTIONS AVANCENT <span>✳</span></div></div>
-    </section>
-
-    <section class="manifesto" aria-labelledby="manifesto-title">
-      <div class="section-index reveal"><span>LE POINT DE DÉPART</span><span>← 00 / CONTEXTE</span></div>
-      <div class="manifesto-main reveal"><span class="giant-quote" aria-hidden="true">“</span><h2 id="manifesto-title">Une base de connaissances ne devrait pas ressembler à un labyrinthe.</h2><p>Le Help Center du Pôle Léonard de Vinci rassemble des centaines de réponses. LeoChat propose une autre entrée : poser sa question en langage naturel et recevoir une réponse exploitable.</p></div>
-      <div class="manifesto-stats reveal"><div><strong data-count="504">0</strong><span>entrées dans le fichier<br>de connaissances du dépôt</span></div><div><strong>1</strong><span>conversation pour accéder<br>à l'information</span></div><div><strong>↗</strong><span>retour utilisateur pour<br>enrichir la base</span></div></div>
-    </section>
-
-    <section class="mechanics" id="mecanique" aria-labelledby="mechanics-title">
-      <div class="section-index reveal"><span>SOUS LE CAPOT</span><span>01 / MÉCANIQUE</span></div>
-      <div class="mechanics-heading reveal"><h2 id="mechanics-title">De la question<br>à la <em>réponse.</em></h2><p>Quatre mouvements. Une architecture simple, rendue visible.</p></div>
-      <div class="flow" aria-label="Fonctionnement du prototype LeoChat">
-        <article class="flow-card reveal"><span class="flow-num">01 / SOURCE</span><div class="flow-visual flow-data" aria-hidden="true"><div class="data-line">id, Title, Content</div><div class="data-line">2133, Absences, …</div><div class="data-line">2141, Justificatif, …</div><div class="data-line">2147, Carte ISIC, …</div></div><h3>La matière</h3><p>Le prototype lit les questions et réponses d'un fichier CSV local.</p></article>
-        <article class="flow-card reveal"><span class="flow-num">02 / CONTEXTE</span><div class="flow-visual flow-prompt" aria-hidden="true"><span>ENTRÉE :</span><span>question étudiante</span><span>SORTIE :</span><span>réponse attendue_</span></div><h3>Le prompt</h3><p>Les exemples sont formatés en paires « Entrée / Sortie » avec la nouvelle question.</p></article>
-        <article class="flow-card reveal"><span class="flow-num">03 / MODÈLE</span><div class="flow-visual flow-model" aria-hidden="true"><span class="orbit orbit-one"></span><span class="orbit orbit-two"></span><b>watsonx.ai</b></div><h3>L'inférence</h3><p>Le prompt est envoyé au modèle LLaMA 3.2 11B Vision Instruct via IBM watsonx.ai.</p></article>
-        <article class="flow-card reveal"><span class="flow-num">04 / BOUCLE</span><div class="flow-visual flow-feedback" aria-hidden="true"><span>RÉPONSE</span><b>♡</b><span>CSV + 1</span></div><h3>Le retour</h3><p>Une réponse jugée utile peut être ajoutée au fichier de connaissances.</p></article>
-      </div>
-      <div class="flow-line" aria-hidden="true"><span></span></div>
-    </section>
-
-    <section class="prototype" id="prototype" aria-labelledby="prototype-title">
-      <div class="section-index reveal"><span>LA PREUVE EN IMAGE</span><span>02 / PROTOTYPE</span></div>
-      <div class="prototype-layout">
-        <div class="prototype-copy reveal"><span class="vertical-star" aria-hidden="true">✳</span><h2 id="prototype-title">Pas une promesse.<br><em>Un prototype.</em></h2><p>L'équipe a développé une interface Flask pour soumettre des questions, consulter les réponses et confirmer celles qui sont utiles. Voici la vidéo de démonstration présente dans le dépôt.</p><div class="prototype-tags"><span>PYTHON</span><span>FLASK</span><span>IBM WATSONX.AI</span><span>CSV</span></div></div>
-        <div class="video-frame reveal"><div class="video-head"><span><i></i> ARCHIVE / DÉMONSTRATION</span><span>GROUP 17</span></div><video controls preload="metadata" playsinline aria-label="Vidéo de démonstration du prototype LeoChat"><source src="assets/video-demo.mp4" type="video/mp4">Votre navigateur ne prend pas en charge cette vidéo.</video><div class="video-foot"><span>LEOCHAT_DEMO.MP4</span><span>▶ ORIGINAL REPOSITORY FOOTAGE</span></div></div>
-      </div>
-    </section>
-
-    <section class="impact" aria-labelledby="impact-title"><div class="impact-overline reveal">DES QUESTIONS À L'IMPACT</div><h2 id="impact-title" class="reveal">MOINS DE RECHERCHE.<br><span>PLUS DE CLARTÉ.</span></h2><div class="impact-grid"><div class="impact-item reveal"><span>01</span><h3>Pour les étudiants</h3><p>Un accès direct aux réponses fréquentes, depuis une interface de conversation.</p></div><div class="impact-item reveal"><span>02</span><h3>Pour les équipes</h3><p>Une base de réponses réutilisable et enrichie par les retours validés.</p></div><div class="impact-item reveal"><span>03</span><h3>Pour la suite</h3><p>Une base de travail pour approfondir la fiabilité, la sécurité et le suivi des échanges.</p></div></div></section>
-
-    <footer id="equipe"><div class="footer-top"><span class="reveal">UN PROJET DU GROUPE 17</span><img src="assets/logo-pole-leonard.png" alt="Pôle Léonard de Vinci" loading="lazy"></div><div class="footer-main"><div class="footer-word reveal">LEO<span>✳</span>CHAT</div><div class="footer-details reveal"><p>Lucie Andacic · Evan Guennou · Iyad Hadife<br>Valentin Huet · Iliana Jaunay · Tiago Machado Monteiro</p><a href="https://github.com/Evanguennou29/Chatbot-PULV-Hackaton-IBM-v2" target="_blank" rel="noopener noreferrer">EXPLORER LE DÉPÔT <span aria-hidden="true">↗</span></a></div></div><div class="footer-bottom"><span>HACKATHON IBM × DE VINCI / 2025</span><a href="#top">REMONTER ↑</a><span>PRÉSENTATION INTERACTIVE / SANS CONNEXION IA</span></div></footer>
-  </main>
+      </section>
+      <section class="workshop" id="atelier" aria-labelledby="workshop-title">
+        <div class="section-heading"><p class="small-label">L’atelier / hackathon 2025</p><h2 id="workshop-title">Derrière le bureau.</h2><p>Une expérimentation du groupe 17,<br>du Help Center à la conversation.</p></div>
+        <div class="workshop-layout">
+          <figure class="film">
+            <video controls preload="metadata" playsinline aria-label="Démonstration du prototype LeoChat"><source src="assets/video-demo.mp4" type="video/mp4">Votre navigateur ne prend pas en charge cette vidéo. <a href="assets/video-demo.mp4">Télécharger la démonstration</a>.</video>
+            <figcaption><span>En images — le prototype d’origine</span><span>Groupe 17, 2025</span></figcaption>
+          </figure>
+          <div class="project-notes">
+            <h3>Une autre porte d’entrée.</h3>
+            <p>Les réponses existent déjà dans le Help Center du Pôle. Notre idée : permettre aux étudiants de les retrouver en posant simplement leur question.</p>
+            <p>Le prototype Python assemble les exemples d’un fichier CSV, puis interroge un modèle sur IBM watsonx.ai. L’interface Flask affiche la réponse et permet de la marquer comme utile.</p>
+            <a class="text-link" href="https://github.com/Evanguennou29/Chatbot-PULV-Hackaton-IBM-v2#démarrage-avec-docker" target="_blank" rel="noopener noreferrer">Installer et essayer le chatbot <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+        <div class="notebook">
+          <div class="notebook-title"><span class="small-label">Notes de fabrication</span><span class="handwritten">encore en chantier</span></div>
+          <dl>
+            <div><dt>La matière première</dt><dd>504 entrées dans le CSV initial. Des questions et réponses sur la vie étudiante, utilisées comme contexte pour le modèle.</dd></div>
+            <div><dt>Le retour étudiant</dt><dd>Une réponse marquée comme utile est ajoutée au CSV local. Ce retour ne constitue pas une validation par la scolarité.</dd></div>
+            <div><dt>Le travail à poursuivre</dt><dd>La recherche dans les documents, la vérification des réponses et la modération des ajouts restent à construire.</dd></div>
+          </dl>
+        </div>
+      </section>
+    </main>
+    <footer id="equipe">
+      <div class="footer-intro"><span class="wordmark">léo<span>chat</span><span class="wordmark-dot">.</span></span><p>Imaginé et développé au<br>Pôle Léonard de Vinci.</p></div>
+      <div class="credits"><p class="small-label">Les six derrière les réponses</p><p>Lucie Andacic · Evan Guennou · Iyad Hadife<br>Valentin Huet · Iliana Jaunay · Tiago Machado Monteiro</p></div>
+      <div class="footer-end"><span>IBM × De Vinci · Groupe 17 · 2025</span><a href="#top">Retour en haut ↑</a></div>
+    </footer>
+  </div>
 </body>
 </html>
-
-
-

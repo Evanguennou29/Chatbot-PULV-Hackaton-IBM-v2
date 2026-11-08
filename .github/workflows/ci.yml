@@ -1,0 +1,42 @@
+name: Checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ['3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+      - run: pip install -r requirements.txt
+      - run: python -m unittest discover -s tests -v
+      - run: node --check docs/app.js
+  containers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: cp .env.example .env
+      - run: docker compose config --quiet
+      - run: docker compose up --build -d --wait --wait-timeout 180
+      - name: Smoke test and persistence
+        run: |
+          curl --fail http://localhost:8000/health
+          curl --fail http://localhost:8000/ > /dev/null
+          curl --fail http://localhost:8080/ | grep 'Le bureau'
+          code=$(curl -s -o /tmp/answer.json -w '%{http_code}' -H 'Content-Type: application/json' -d '{"question":"Bonjour"}' http://localhost:8000/answer)
+          test "$code" = 503
+          curl --fail -H 'Content-Type: application/json' -d '{"question":"CI persistence probe","answer":"CI sample"}' http://localhost:8000/satisfied
+          docker compose up -d --force-recreate --wait chatbot
+          docker compose exec -T chatbot python -c "import csv; rows=list(csv.DictReader(open('/app/dataset/data_pretraitee.csv'))); assert rows[-1]['Title']=='CI persistence probe'; assert len(rows[-1])==9"
+      - name: Container logs
+        if: always()
+        run: docker compose logs
+      - name: Cleanup
+        if: always()
+        run: docker compose down --volumes
